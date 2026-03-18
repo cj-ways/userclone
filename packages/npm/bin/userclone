@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+/**
+ * Shim that locates and runs the userclone binary.
+ */
+
+const { spawnSync } = require("child_process");
+const path = require("path");
+const fs = require("fs");
+
+const isWin = process.platform === "win32";
+const binName = isWin ? "userclone.exe" : "userclone";
+const binPath = path.join(__dirname, binName);
+
+if (!fs.existsSync(binPath)) {
+  console.error("userclone binary not found. Try reinstalling: npm install -g @cj-ways/userclone");
+  process.exit(1);
+}
+
+const result = spawnSync(binPath, process.argv.slice(2), { stdio: "inherit" });
+process.exit(result.status ?? 1);

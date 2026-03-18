@@ -1,4 +1,6 @@
-userclone
-userclone.exe
-packages/npm/bin/userclone
+# Built Go binary in project root
+/userclone
+/userclone.exe
+
+# Downloaded binary in npm package (but keep the shim script)
 packages/npm/bin/userclone.exe
