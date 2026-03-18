@@ -1,0 +1,31 @@
+{
+  "name": "@cj-ways/userclone",
+  "version": "0.1.0",
+  "description": "Clone your entire GitHub/GitLab setup — personal repos and org repos — in one command",
+  "bin": {
+    "userclone": "./bin/userclone"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "keywords": [
+    "github",
+    "gitlab",
+    "clone",
+    "repos",
+    "backup",
+    "migration",
+    "onboarding",
+    "cli"
+  ],
+  "author": "cj-ways",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cj-ways/userclone.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cj-ways/userclone/issues"
+  },
+  "homepage": "https://github.com/cj-ways/userclone#readme"
+}
