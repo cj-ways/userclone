@@ -15,34 +15,28 @@ Or download a binary from [Releases](https://github.com/cj-ways/userclone/releas
 ## Quick Start
 
 ```bash
-# Clone all your personal repos to ~/Desktop
-userclone clone --token ghp_xxx
+# 1. Set up your token (one time)
+userclone init                          # creates ~/.userclone.yml
+# edit ~/.userclone.yml → paste your GitHub token
 
-# Include all org repos too
-userclone clone --token ghp_xxx --with-orgs
-
-# Clone only repos from specific orgs
-userclone clone --token ghp_xxx --org cj-ways --org another-org
-
-# Skip personal repos, only org repos
-userclone clone --token ghp_xxx --only-orgs --with-orgs
-
-# GitLab support
-userclone clone --token glpat_xxx --gitlab
-
-# Dry run to preview
-userclone clone --token ghp_xxx --with-orgs --dry-run
+# 2. Clone everything
+userclone clone                         # personal repos → ~/Desktop
+userclone clone --with-orgs             # personal + all org repos
+userclone clone --org cj-ways           # personal + specific org
+userclone clone --only-orgs --with-orgs # org repos only
+userclone clone --dry-run               # preview without cloning
+userclone clone --gitlab                # use GitLab instead
 ```
 
-## Config
+You can also set the token via environment variable (`GITHUB_TOKEN` / `GITLAB_TOKEN`) or pass it directly with `--token`.
 
-Generate a config file:
+## Config
 
 ```bash
 userclone init
 ```
 
-This creates `~/.userclone.yml`:
+Creates `~/.userclone.yml`:
 
 ```yaml
 default_dest: ~/Desktop
@@ -50,10 +44,10 @@ default_platform: github
 with_orgs: false
 
 github:
-  token: ghp_xxx
+  token: ghp_xxx               # or set GITHUB_TOKEN env var
 
 gitlab:
-  token: glpat_xxx
+  token: glpat_xxx              # or set GITLAB_TOKEN env var
   url: https://gitlab.com
 
 exclude:

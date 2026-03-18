@@ -8,20 +8,20 @@ Clone your entire GitHub/GitLab setup — personal repos and org repos — in on
 npm install -g @cj-ways/userclone
 ```
 
+## Setup
+
+```bash
+userclone init                    # creates ~/.userclone.yml
+# edit it → paste your GitHub/GitLab token
+```
+
 ## Usage
 
 ```bash
-# Clone all your personal repos
-userclone clone --token ghp_xxx
-
-# Include org repos
-userclone clone --token ghp_xxx --with-orgs
-
-# Dry run
-userclone clone --token ghp_xxx --dry-run
-
-# GitLab
-userclone clone --token glpat_xxx --gitlab
+userclone clone                   # clone all personal repos
+userclone clone --with-orgs       # include org repos
+userclone clone --dry-run         # preview without cloning
+userclone clone --gitlab          # use GitLab instead
 ```
 
 See full docs at [github.com/cj-ways/userclone](https://github.com/cj-ways/userclone).
