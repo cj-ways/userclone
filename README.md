@@ -15,20 +15,131 @@ Or download a binary from [Releases](https://github.com/cj-ways/userclone/releas
 ## Quick Start
 
 ```bash
-# 1. Set up your token (one time)
-userclone init                          # creates ~/.userclone.yml
-# edit ~/.userclone.yml → paste your GitHub token
-
-# 2. Clone everything
-userclone clone                         # personal repos → ~/Desktop
-userclone clone --with-orgs             # personal + all org repos
-userclone clone --org cj-ways           # personal + specific org
-userclone clone --only-orgs --with-orgs # org repos only
-userclone clone --dry-run               # preview without cloning
-userclone clone --gitlab                # use GitLab instead
+userclone clone
 ```
 
-You can also set the token via environment variable (`GITHUB_TOKEN` / `GITLAB_TOKEN`) or pass it directly with `--token`.
+The interactive wizard walks you through:
+
+1. **Platform** — GitHub or GitLab
+2. **Authentication** — auto-detects `gh` CLI token, or OAuth device flow, or paste manually
+3. **Destination** — Desktop (default) or custom path
+4. **Folder name** — "GitHub User", your display name, or custom
+5. **Visibility** — All, public only, or private only
+6. **Scope** — Everything, personal only, orgs only, or pick manually
+7. **Structure** — Separated (orgs alongside) or Grouped (everything nested)
+8. **Summary** — Review and confirm before cloning
+
+### Wizard Example
+
+```
+? Which platform? GitHub
+  Found token from GitHub CLI (gh)
+  Authenticated as Saba Janelidze (@sabajanelidze)
+
+? Where to clone? Desktop (~/Desktop)
+? Folder name for your repos? Saba Janelidze
+? Which repos? All repos
+
+Fetching repos...
+  Found 23 personal repos, 35 repos across 3 orgs
+
+? What to clone? Everything (23 personal + 35 from 3 orgs)
+? Folder structure? Separated — orgs alongside, personal in "Saba Janelidze/"
+
+━━ Summary ━━━━━━━━━━━━━━━━━━━
+Platform:    GitHub
+User:        Saba Janelidze (@sabajanelidze)
+Path:        ~/Desktop
+Folder:      Saba Janelidze
+Repos:       58 (23 personal + 35 from 3 orgs)
+Visibility:  All
+Structure:   Separated
+
+? Show full repo list? No
+? Proceed? Yes
+```
+
+## Directory Layout
+
+### Separated (default)
+
+Orgs sit alongside the personal folder:
+
+```
+~/Desktop/
+├── Saba Janelidze/        <- personal repos
+│   ├── repo-1/
+│   └── repo-2/
+├── cj-ways/               <- org repos
+│   └── org-repo-1/
+└── another-org/
+    └── org-repo-2/
+```
+
+### Grouped
+
+Everything under one folder:
+
+```
+~/Desktop/Saba Janelidze/
+├── repo-1/                <- personal repos
+├── repo-2/
+├── cj-ways/               <- org repos nested inside
+│   └── org-repo-1/
+└── another-org/
+    └── org-repo-2/
+```
+
+## Flags (Shortcuts)
+
+Flags skip wizard steps. Provide all flags for fully non-interactive usage.
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--token` | `-t` | GitHub/GitLab personal access token |
+| `--dest` | `-d` | Base destination directory (legacy mode, no folder name) |
+| `--with-orgs` | | Clone repos from all orgs |
+| `--org` | `-o` | Clone specific org(s) only (repeatable) |
+| `--only-orgs` | | Skip personal repos |
+| `--exclude` | `-e` | Comma-separated repo names to skip |
+| `--skip-archived` | | Skip archived repos |
+| `--skip-forks` | | Skip forked repos |
+| `--private-only` | | Only private repos |
+| `--public-only` | | Only public repos |
+| `--pick` | | Interactive checkbox selection |
+| `--dry-run` | | Preview without cloning |
+| `--flat` | | No org grouping, everything in dest root |
+| `--gitlab` | | Use GitLab instead of GitHub |
+| `--gitlab-url` | | Self-hosted GitLab URL |
+
+### Non-Interactive Examples
+
+```bash
+# Clone personal repos only (old behavior)
+userclone clone --token ghp_xxx --dest ~/Desktop
+
+# Clone everything including orgs
+userclone clone --token ghp_xxx --dest ~/Desktop --with-orgs
+
+# Only public repos from a specific org
+userclone clone --token ghp_xxx --dest ~/Projects --org cj-ways --public-only
+
+# Preview what would be cloned
+userclone clone --dry-run
+```
+
+## Authentication
+
+Token is resolved in this order:
+
+1. `--token` flag
+2. `~/.userclone.yml` config file
+3. Environment variable (`GITHUB_TOKEN` / `GITLAB_TOKEN`)
+4. `gh` CLI / `glab` CLI (auto-detected)
+5. OAuth Device Flow (GitHub — requires registered OAuth App)
+6. Manual paste (interactive prompt)
+
+Tokens obtained interactively can be saved to `~/.userclone.yml` for future use.
 
 ## Config
 
@@ -68,55 +179,11 @@ userclone default dest ~/Projects
 userclone default with-orgs true
 ```
 
-## Flags
-
-| Flag | Short | Description |
-|------|-------|-------------|
-| `--token` | `-t` | GitHub/GitLab personal access token |
-| `--dest` | `-d` | Base destination directory (default `~/Desktop`) |
-| `--with-orgs` | | Also clone repos from all orgs |
-| `--org` | `-o` | Clone specific org(s) only (repeatable) |
-| `--only-orgs` | | Skip personal repos |
-| `--exclude` | `-e` | Comma-separated repo names to skip |
-| `--skip-archived` | | Skip archived repos |
-| `--skip-forks` | | Skip forked repos |
-| `--private-only` | | Only private repos |
-| `--public-only` | | Only public repos |
-| `--pick` | | Interactive selection per group |
-| `--dry-run` | | Preview without cloning |
-| `--flat` | | No org grouping, everything in dest root |
-| `--gitlab` | | Use GitLab instead of GitHub |
-| `--gitlab-url` | | Self-hosted GitLab URL |
-
-## Directory Layout
-
-```
-~/Desktop/
-├── personal-repo-1/
-├── personal-repo-2/
-├── my-org/
-│   ├── org-repo-1/
-│   └── org-repo-2/
-└── another-org/
-    └── repo-3/
-```
-
-Use `--flat` to skip org grouping.
-
 ## Token Scopes
 
 **GitHub:** `repo` (full control of private repositories)
 
 **GitLab:** `read_api` (read access to the API)
-
-## Priority
-
-Settings are resolved lowest to highest:
-
-1. Code defaults
-2. `~/.userclone.yml`
-3. Environment variables (`GITHUB_TOKEN` / `GITLAB_TOKEN`)
-4. CLI flags
 
 ## License
 
