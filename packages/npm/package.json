@@ -1,7 +1,7 @@
 {
   "name": "@cj-ways/userclone",
-  "version": "0.1.0",
-  "binaryVersion": "0.1.0",
+  "version": "0.2.0",
+  "binaryVersion": "0.2.0",
   "description": "Clone your entire GitHub/GitLab setup — personal repos and org repos — in one command",
   "bin": {
     "userclone": "bin/userclone"
